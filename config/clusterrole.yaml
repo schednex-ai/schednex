@@ -1,0 +1,27 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: schednex-cluster-role
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods/binding"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods/status"]
+    verbs: ["update"]
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["create", "get", "list", "update"]
+  # Adding permissions to access K8sGPT resources
+  - apiGroups: ["core.k8sgpt.ai"]   # API group for K8sGPT
+    resources: ["k8sgpts"]          # Custom resource for K8sGPT
+    verbs: ["get", "list", "watch"] # Verbs for accessing K8sGPT resources
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get", "list", "watch"]

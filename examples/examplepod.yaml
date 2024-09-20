@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+spec:
+  schedulerName: schednex  # Specify the custom scheduler
+  containers:
+    - name: nginx
+      image: nginx:latest
+      ports:
+        - containerPort: 80

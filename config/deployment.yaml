@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: schednex
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: schednex
+  template:
+    metadata:
+      labels:
+        app: schednex
+    spec:
+      serviceAccountName: schednex-sa
+      containers:
+        - name: schednex
+          image: k8sgpt/schednex:v0  # Replace with your image repo
+          imagePullPolicy: Always
+          command: ["/app/schednex"]  # Make sure this matches your CMD in Dockerfile
