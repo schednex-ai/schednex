@@ -12,10 +12,10 @@ require (
 )
 
 require (
-	buf.build/gen/go/k8sgpt-ai/k8sgpt/connectrpc/go v1.16.2-20240807134501-ea98c104104d.1 // indirect
-	buf.build/gen/go/k8sgpt-ai/k8sgpt/grpc-ecosystem/gateway/v2 v2.22.0-20240807134501-ea98c104104d.1 // indirect
-	buf.build/gen/go/k8sgpt-ai/k8sgpt/grpc/go v1.5.1-20240807134501-ea98c104104d.1 // indirect
-	buf.build/gen/go/k8sgpt-ai/k8sgpt/protocolbuffers/go v1.34.2-20240807134501-ea98c104104d.2 // indirect
+	buf.build/gen/go/k8sgpt-ai/k8sgpt/connectrpc/go v1.17.0-20240920204244-7a91c8620515.1 // indirect
+	buf.build/gen/go/k8sgpt-ai/k8sgpt/grpc-ecosystem/gateway/v2 v2.22.0-20240920204244-7a91c8620515.1 // indirect
+	buf.build/gen/go/k8sgpt-ai/k8sgpt/grpc/go v1.5.1-20240920204244-7a91c8620515.1 // indirect
+	buf.build/gen/go/k8sgpt-ai/k8sgpt/protocolbuffers/go v1.34.2-20240920204244-7a91c8620515.2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
@@ -68,6 +68,7 @@ require (
 	k8s.io/apiextensions-apiserver v0.31.0 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20240228011516-70dd3763d340 // indirect
+	k8s.io/metrics v0.31.1 // indirect
 	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect

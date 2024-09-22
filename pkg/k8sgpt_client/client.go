@@ -14,12 +14,16 @@ limitations under the License.
 package k8sgpt_client
 
 import (
+	schemav1 "buf.build/gen/go/k8sgpt-ai/k8sgpt/protocolbuffers/go/schema/v1"
 	"context"
+	"encoding/json"
 	"fmt"
-	"log"
+	"github.com/go-logr/logr"
 	"net"
+	"os"
 	"time"
 
+	rpc "buf.build/gen/go/k8sgpt-ai/k8sgpt/grpc/go/schema/v1/schemav1grpc"
 	"github.com/k8sgpt-ai/k8sgpt-operator/api/v1alpha1"
 	"google.golang.org/grpc"
 	corev1 "k8s.io/api/core/v1"
@@ -28,46 +32,52 @@ import (
 
 // Client for communicating with the K8sGPT in cluster deployment
 type Client struct {
-	conn *grpc.ClientConn
+	conn                *grpc.ClientConn
+	currentK8sgptConfig v1alpha1.K8sGPT
+	log                 logr.Logger
 }
 
 func (c *Client) Close() error {
 	return c.conn.Close()
 }
 
-// NewClient will detect K8sGPT instances currently running in the Kubernetes cluster and connect to the first it finds
-func NewClient(ctrlruntimeClient cntrlclient.Client) (*Client, error) {
+func (c *Client) GetCurrentConfig() (v1alpha1.K8sGPT, error) {
+	return c.currentK8sgptConfig, nil
+}
 
+// NewClient will detect K8sGPT instances currently running in the Kubernetes cluster and connect to the first it finds
+func NewClient(ctrlruntimeClient cntrlclient.Client, log logr.Logger) (*Client, error) {
+
+	log = log.WithName("k8sgpt-client")
 	// add log
-	log.Printf("Creating new client for K8sGPT")
+	log.Info("Creating new client for K8sGPT")
 	k8sgptList := &v1alpha1.K8sGPTList{}
 	err := ctrlruntimeClient.List(context.Background(), k8sgptList, &cntrlclient.ListOptions{})
 	if err != nil {
-		log.Fatalf("Failed to list K8sGPT objects: %v", err)
+		log.Error(err, "Failed to list K8sGPT objects")
+		return nil, err // Consider returning the error here
 	}
-	// how many items
-	log.Printf("Number of K8sGPT objects found: %d", len(k8sgptList.Items))
 	// Check list length
 	if len(k8sgptList.Items) == 0 {
 		return nil, fmt.Errorf("no K8sGPT objects found")
 	}
-	// Get the first K8sGPT Object (for now)
+
+	// TODO: Get the first K8sGPT Object (for now)
 	k8sgptConfig := k8sgptList.Items[0]
-	// print the raw object
-	log.Printf("K8sGPT object: %v", k8sgptConfig)
+
 	// Generate address
-	log.Printf("Generating address for K8sGPT")
+	log.Info("Generating address for K8sGPT")
 	address, err := GenerateAddress(context.Background(), ctrlruntimeClient, &k8sgptConfig)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate address: %v", err)
 	}
-	// print address to log
-	log.Printf("Address: %s", address)
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		return nil, fmt.Errorf("failed to create context: %v", err)
 	}
-	client := &Client{conn: conn}
+	client := &Client{conn: conn,
+		currentK8sgptConfig: k8sgptConfig,
+	}
 
 	return client, nil
 }
@@ -76,6 +86,9 @@ func GenerateAddress(ctx context.Context, cli cntrlclient.Client, k8sgptConfig *
 	var address string
 	var ip net.IP
 
+	if os.Getenv("LOCAL_MODE") != "" {
+		return "localhost:8080", nil
+	}
 	// Get service IP and port for k8sgpt-deployment
 	svc := &corev1.Service{}
 	err := cli.Get(ctx, cntrlclient.ObjectKey{Namespace: k8sgptConfig.Namespace,
@@ -102,4 +115,56 @@ func GenerateAddress(ctx context.Context, cli cntrlclient.Client, k8sgptConfig *
 	fmt.Printf("Remote Address : %s \n", conn.RemoteAddr().String())
 
 	return address, nil
+}
+
+func (c *Client) RunAnalysis(allowAIRequest bool) (string, error) {
+	config, err := c.GetCurrentConfig()
+	if err != nil {
+		return "", fmt.Errorf("failed to get current config: %v", err)
+	}
+	c.log.Info("Running analysis for K8sGPT")
+	client := rpc.NewServerAnalyzerServiceClient(c.conn)
+	req := &schemav1.AnalyzeRequest{
+		Explain:   config.Spec.AI.Enabled && allowAIRequest,
+		Nocache:   config.Spec.NoCache,
+		Backend:   config.Spec.AI.Backend,
+		Namespace: config.Spec.TargetNamespace,
+		Filters:   config.Spec.Filters,
+		Anonymize: *config.Spec.AI.Anonymize,
+		Language:  config.Spec.AI.Language,
+	}
+	res, err := client.Analyze(context.Background(), req)
+	if err != nil {
+		return "", fmt.Errorf("failed to call Analyze RPC: %v", err)
+	}
+	c.log.Info("Analysis complete")
+	// convert to a json structure for searchability
+	jsonBytes, err := json.Marshal(res.Results)
+	if err != nil {
+		return "", err
+	}
+	return string(jsonBytes), nil
+}
+
+func (c *Client) Query(prompt string) (string, error) {
+	config, err := c.GetCurrentConfig()
+	if err != nil {
+		return "", fmt.Errorf("failed to get current config: %v", err)
+	}
+	c.log.Info("Running query for K8sGPT")
+	client := rpc.NewServerQueryServiceClient(c.conn)
+	req := &schemav1.QueryRequest{
+		Query:   prompt,
+		Backend: config.Spec.AI.Backend,
+	}
+
+	res, err := client.Query(context.Background(), req)
+	if err != nil {
+		return "", fmt.Errorf("failed to call Query RPC: %v", err)
+	}
+	c.log.Info("Query complete")
+	if res.Error.Message != "" {
+		return "", fmt.Errorf("error in query response: %s", res.Error.Message)
+	}
+	return res.Response, nil
 }

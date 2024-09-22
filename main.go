@@ -10,15 +10,16 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"github.com/k8sgpt-ai/k8sgpt-operator/api/v1alpha1"
 	"github.com/k8sgpt-ai/schednex.git/pkg/k8sgpt_client"
+	"github.com/k8sgpt-ai/schednex.git/pkg/placement"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
+	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
 	"os"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -29,16 +30,10 @@ import (
 func main() {
 	// Setup Zap logger with development mode
 	var enableDevelopmentMode bool
+	var allowAI bool
 	flag.BoolVar(&enableDevelopmentMode, "development", true, "Enable development mode for Zap logger")
+	flag.BoolVar(&allowAI, "allow-ai", true, "Enable AI for scheduling")
 	// Try to get the kubeconfig from outside the cluster (for development)
-	kubeconfigFlag := flag.Lookup("kubeconfig")
-	var kubeconfig string
-	if kubeconfigFlag != nil {
-		kubeconfig = kubeconfigFlag.Value.String()
-	} else {
-		// Default to a path or handle the error if it's not defined
-		kubeconfig = os.Getenv("HOME") + "/.kube/config"
-	}
 	flag.Parse()
 
 	// Initialize the Zap logger using controller-runtime
@@ -52,7 +47,7 @@ func main() {
 
 	if config, err = rest.InClusterConfig(); err != nil {
 		// Fallback to kubeconfig from outside the cluster
-		config, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
+		config, err = clientcmd.BuildConfigFromFlags("", os.Getenv("HOME")+"/.kube/config")
 		if err != nil {
 			log.Error(err, "Failed to build Kubernetes config")
 			os.Exit(1)
@@ -68,19 +63,28 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Create a Kubernetes clientset using client-go
+	// Create a Kubernetes Client using client-go
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		log.Error(err, "Failed to create Kubernetes clientset")
 		os.Exit(1)
 	}
 
-	_, err = k8sgpt_client.NewClient(ctrlclient)
+	// Create a new k8sgpt Client
+	k8sgptClient, err := k8sgpt_client.NewClient(ctrlclient, log)
 	if err != nil {
 		log.Error(err, "Failed to connect k8sgpt client")
 		os.Exit(1)
 	}
 
+	// Create a new metrics Client
+	metricsClient, err := metricsv.NewForConfig(config)
+	if err != nil {
+		log.Error(err, "Failed to create metrics client")
+		os.Exit(1)
+	}
+	// Create a new Placement Coordinator
+	coordinator := placement.NewCoordinator(k8sgptClient, clientset, metricsClient, log)
 	// Start custom scheduler loop
 	for {
 		// List unscheduled pods
@@ -94,7 +98,7 @@ func main() {
 		for _, pod := range unscheduledPods.Items {
 			log.Info("Scheduling Pod", "namespace", pod.Namespace, "name", pod.Name)
 
-			node, err := findNodeForPod(clientset, pod)
+			node, err := coordinator.FindNodeForPod(pod, allowAI)
 			if err != nil {
 				log.Error(err, "Failed to find a node for pod", "namespace", pod.Namespace, "name", pod.Name)
 				continue
@@ -118,21 +122,6 @@ func getUnscheduledPods(clientset *kubernetes.Clientset) (*v1.PodList, error) {
 	return clientset.CoreV1().Pods("").List(context.TODO(), metav1.ListOptions{
 		FieldSelector: "spec.nodeName==",
 	})
-}
-
-// findNodeForPod is where you can add custom logic (e.g., using k8sgpt) to select a node for a pod
-func findNodeForPod(clientset *kubernetes.Clientset, pod v1.Pod) (string, error) {
-	nodes, err := clientset.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
-	if err != nil {
-		return "", err
-	}
-
-	// Simple logic: select the first available node (custom logic can go here)
-	for _, node := range nodes.Items {
-		return node.Name, nil
-	}
-
-	return "", fmt.Errorf("no nodes available")
 }
 
 // bindPodToNode binds a pod to a specific node
