@@ -32,7 +32,7 @@ func NewCoordinator(client *k8sgpt_client.Client, kubernetesClient *kubernetes.C
 	}
 }
 func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
-	nodes, err := c.kubernetesClient.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
+	_, err := c.kubernetesClient.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return "", err
 	}
