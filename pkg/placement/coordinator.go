@@ -11,6 +11,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
 	"log"
+	"strings"
 )
 
 type Coordinator struct {
@@ -74,7 +75,7 @@ func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
 	// Print the response
 	log.Printf("Response: %s", response)
 	// if response is a single word only use it
-	if len(response) == 1 {
+	if len(strings.Split(response, " ")) == 1 {
 		return response, nil
 	}
 	return "", fmt.Errorf("no nodes available")
