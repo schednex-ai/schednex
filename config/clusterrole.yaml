@@ -21,7 +21,11 @@ rules:
   # Adding permissions to access K8sGPT resources
   - apiGroups: ["core.k8sgpt.ai"]   # API group for K8sGPT
     resources: ["k8sgpts"]          # Custom resource for K8sGPT
-    verbs: ["get", "list", "watch"] # Verbs for accessing K8sGPT resources
+    verbs: ["get", "list", "watch"]
   - apiGroups: [""]
     resources: ["services"]
+    verbs: ["get", "list", "watch"]
+  # Adding permissions to access node metrics from metrics.k8s.io API group
+  - apiGroups: ["metrics.k8s.io"]
+    resources: ["nodes"]
     verbs: ["get", "list", "watch"]
