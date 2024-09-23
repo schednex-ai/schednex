@@ -5,7 +5,8 @@ Enabling the smartest placement of your workloads.
 
 ## Requirements
 
-- K8sGPT-operator installed with a deployed K8sGPT custom resource
+- k8sgpt-operator installed with a deployed K8sGPT custom resource
+  - k8sgpt resource must have AI enabled and using the `openai` backend
 - Metrics Server installed in the cluster:
   - `kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml`
 
