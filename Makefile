@@ -19,6 +19,14 @@ update-image-tag:
 push:
 	docker push $(IMAGE_NAME):$(TAG)
 
+# Create a development cluster with kind
+cluster-up:
+	kind create cluster --config examples/kind-three-node-cluster.yaml
+	kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+	kubectl -n kube-system patch deployment metrics-server \
+	  --type='json' \
+	  -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
+
 # Clean up any local images
 clean:
 	docker rmi $(IMAGE_NAME):$(TAG) || true
