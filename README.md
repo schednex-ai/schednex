@@ -7,6 +7,8 @@ Enabling the smartest placement of your workloads.
 
 - k8sgpt-operator installed with a deployed K8sGPT custom resource
   - k8sgpt resource must have AI enabled and using the `openai` backend
+  - **K8sGPT v0.3.41 and later**
+  - Disable caching `noCache: true` within the K8sGPT CR
 - Metrics Server installed in the cluster:
   - `kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml`
 

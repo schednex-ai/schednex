@@ -10,7 +10,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
-	"log"
 	"strings"
 )
 
@@ -33,10 +32,6 @@ func NewCoordinator(client *k8sgpt_client.Client, kubernetesClient *kubernetes.C
 	}
 }
 func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
-	_, err := c.kubernetesClient.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
-	if err != nil {
-		return "", err
-	}
 	k8sgptAnalysis, err := c.k8sgptClient.RunAnalysis(allowAI)
 	if err != nil {
 		c.log.Error(err, "Something went wrong with K8sGPT analysis")
@@ -47,7 +42,7 @@ func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
 	nodeMetricsList, err := c.metricsClient.MetricsV1beta1().
 		NodeMetricses().List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		log.Fatalf("Failed to get node metrics: %v", err)
+		c.log.Error(err, "Failed to get node metrics")
 		return "", err
 	}
 	// Flatten nodeMetricsList items into json
@@ -56,27 +51,29 @@ func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
 		return "", err
 	}
 	// Print nodeMetricsListJson
-	log.Printf("NodeMetricsList: %s", nodeMetricsListJson)
 	// Simple logic: select the first available node (custom logic can go here)
-	var prompt string = "Given the following nodes and analysis of issues in the cluster, I want you to return only the node name for placement, nothing else." +
+	var prompt string = "Given the following nodes and analysis of issues in the cluster, I want you to tell me the best node for placement, no other text." +
 		"Please find the data in two segments below: \n" +
 		"1. Nodes in the cluster: %s\n" +
 		"2. Analysis of issues in the cluster (this may be empty) %s\n"
 	combinedPrompt := fmt.Sprintf(prompt, nodeMetricsListJson, k8sgptAnalysis)
-	// Combine the k8sgpt Analysis and the node metrics to make a decision
-	// Print the combined prompt
-	log.Printf("Combined Prompt: %s", combinedPrompt)
+	// Combine the K8sGPT Analysis and the node metrics to make a decision
 	// Send query
 	response, err := c.k8sgptClient.Query(combinedPrompt)
 	if err != nil {
 		return "", err
 	}
-
-	// Print the response
-	log.Printf("Response: %s", response)
-	// if response is a single word only use it
-	if len(strings.Split(response, " ")) == 1 {
-		return response, nil
+	// Often the response can be a list of multiple nodes, sometimes even missing a string seperator
+	fmt.Printf("Response: %s\n", response)
+	firstResponse := strings.Split(response, " ")[0]
+	if firstResponse == "" {
+		return "", fmt.Errorf("no response found")
 	}
-	return "", fmt.Errorf("no nodes available")
+	// Loop through the first response and make sure it matches exactly to a node name
+	for _, node := range nodeMetricsList.Items {
+		if firstResponse == node.Name {
+			return firstResponse, nil
+		}
+	}
+	return "", fmt.Errorf("node not found")
 }

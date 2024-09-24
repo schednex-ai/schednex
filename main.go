@@ -100,7 +100,8 @@ func main() {
 
 			node, err := coordinator.FindNodeForPod(pod, allowAI)
 			if err != nil {
-				log.Error(err, "Failed to find a node for pod", "namespace", pod.Namespace, "name", pod.Name)
+				// print the error we get back
+				log.Error(err, "Error from K8sGPT", "pod", pod.Name)
 				continue
 			}
 
