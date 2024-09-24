@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.2](https://github.com/schednex-ai/schednex/compare/v1.0.1...v1.0.2) (2024-09-24)
+
+
+### Bug Fixes
+
+* **release:** move helm chart to sub directory since gh action looks there ([22e90d2](https://github.com/schednex-ai/schednex/commit/22e90d26cca70e8037c1d92a3d5307e1bb584411))
+
+
+### Other
+
+* ability to switch to default on error ([009b90e](https://github.com/schednex-ai/schednex/commit/009b90edac0959e324b4daea6d1c2de4892756f1))
+* added event message ([48b26a8](https://github.com/schednex-ai/schednex/commit/48b26a8f6f1fac5c659214a166595a2b93ec1fc3))
+
 ## [1.0.1](https://github.com/schednex-ai/schednex/compare/v1.0.0...v1.0.1) (2024-09-24)
 
 
