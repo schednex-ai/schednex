@@ -17,7 +17,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go binary
-RUN CGO_ENABLED=0 GOOS=linux go build -o schednex .
+RUN CGO_ENABLED=0 GOOS=linux go build -o schednex_binary .
 
 # Step 2: Create a smaller image with the binary
 FROM alpine:latest
@@ -29,7 +29,7 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /app
 
 # Copy the built Go binary from the builder stage
-COPY --from=builder /app/ .
+COPY --from=builder /app/schednex_binary /app/schednex
 
 # Expose port if necessary (e.g., for metrics or health checks)
 # EXPOSE 8080

@@ -1,5 +1,6 @@
 # Variables
-IMAGE_NAME = ghcr.io/schednex-ai/schednex
+# IMAGE_NAME = ghcr.io/schednex-ai/schednex
+IMAGE_NAME = k8sgpt/schednex
 TAG = v0
 CONFIG_DIR = config
 
