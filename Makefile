@@ -1,7 +1,7 @@
 # Variables
 # IMAGE_NAME = ghcr.io/schednex-ai/schednex
 IMAGE_NAME = k8sgpt/schednex
-TAG = v0
+TAG = v0 # x-release-please-version
 CONFIG_DIR = config
 
 # Default target

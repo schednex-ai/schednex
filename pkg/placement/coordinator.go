@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/go-logr/logr"
 	"github.com/k8sgpt-ai/schednex.git/pkg/k8sgpt_client"
+	"github.com/k8sgpt-ai/schednex.git/pkg/prompt"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -52,11 +53,7 @@ func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
 	}
 	// Print nodeMetricsListJson
 	// Simple logic: select the first available node (custom logic can go here)
-	var prompt string = "Given the following nodes and analysis of issues in the cluster, I want you to tell me the best node for placement, no other text." +
-		"Please find the data in two segments below: \n" +
-		"1. Nodes in the cluster: %s\n" +
-		"2. Analysis of issues in the cluster (this may be empty) %s\n"
-	combinedPrompt := fmt.Sprintf(prompt, nodeMetricsListJson, k8sgptAnalysis)
+	combinedPrompt := fmt.Sprintf(prompt.Standard, nodeMetricsListJson, k8sgptAnalysis)
 	// Combine the K8sGPT Analysis and the node metrics to make a decision
 	// Send query
 	response, err := c.k8sgptClient.Query(combinedPrompt)
