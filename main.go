@@ -111,10 +111,34 @@ func main() {
 			} else {
 				log.Info("Successfully scheduled pod", "pod", pod.Name, "node", node)
 			}
+			event := &v1.Event{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "PodScheduled",
+					Namespace: pod.Namespace,
+				},
+			}
+			// Set the event message
+			event.Message = "Pod " + pod.Name + " scheduled on node " + node
+			// Set the event type
+			event.Type = "Normal"
+			// Set the event reason
+			event.Reason = "Scheduled"
+			// Set the involved object#
+			event.InvolvedObject = v1.ObjectReference{
+				Kind:      "Pod",
+				Namespace: pod.Namespace,
+				Name:      pod.Name,
+				UID:       pod.UID,
+			}
+			// Send the event
+			_, err = clientset.CoreV1().Events(pod.Namespace).Create(context.TODO(), event, metav1.CreateOptions{})
+			if err != nil {
+				log.Error(err, "Failed to send event", "pod", pod.Name)
+			}
 		}
 
 		// Sleep before the next scheduling loop
-		time.Sleep(10 * time.Second)
+		time.Sleep(5 * time.Second)
 	}
 }
 

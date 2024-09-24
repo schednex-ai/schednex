@@ -9,6 +9,7 @@ import (
 	"github.com/k8sgpt-ai/schednex.git/pkg/prompt"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"
 	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
 	"strings"
@@ -72,5 +73,18 @@ func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
 			return firstResponse, nil
 		}
 	}
-	return "", fmt.Errorf("node not found")
+	// Delegate to the default scheduler on error
+	patchData := []byte(`{"spec": {"schedulerName": null}}`)
+	_, err = c.kubernetesClient.CoreV1().Pods(pod.Namespace).Patch(
+		context.TODO(),
+		pod.Name,
+		types.StrategicMergePatchType,
+		patchData,
+		metav1.PatchOptions{},
+	)
+	if err != nil {
+		c.log.Error(err, "Failed to patch pod to use default scheduler")
+		return "", err
+	}
+	return "", fmt.Errorf("no node found")
 }
