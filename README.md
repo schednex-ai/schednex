@@ -19,5 +19,5 @@ Enabling the smartest placement of your workloads.
 ```
 helm repo add schednex-ai https://schednex-ai.github.io/charts/
 helm repo update
-helm install release schednex-ai/schednex -n kube-system
+helm install schednex-scheduler schednex-ai/schednex -n kube-system
 ```
