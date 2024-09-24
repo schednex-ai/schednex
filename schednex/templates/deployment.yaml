@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: schednex
+  template:
+    metadata:
+      labels:
+        app: schednex
+    spec:
+      serviceAccountName: {{ .Release.Name }}-sa
+      containers:
+        - name: schednex
+          image: {{ .Values.image }}:{{ .Values.tag }}
+          imagePullPolicy: Always
+          command: ["/app/schednex"]  # Make sure this matches your CMD in Dockerfile
