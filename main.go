@@ -86,6 +86,7 @@ func main() {
 	// Create a new Placement Coordinator
 	coordinator := placement.NewCoordinator(k8sgptClient, clientset, metricsClient, log)
 	// Start custom scheduler loop
+	log.Info("Starting Schednex...")
 	for {
 		// List unscheduled pods
 		unscheduledPods, err := getUnscheduledPods(clientset)
