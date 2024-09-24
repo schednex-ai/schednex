@@ -50,7 +50,7 @@ jobs:
         with:
           token: ${{ secrets.SCHEDNEX_BOT_SECRET }}
           charts_dir: charts
-          charts_url: https://charts.schednex-ai.github.io
+          charts_url: https://schednex-ai.github.io/charts/
           owner: schednex-ai
           repository: charts
           branch: main
