@@ -33,10 +33,9 @@ clean:
 
 # Deploy the Kubernetes manifests
 deploy:
-	kubectl apply -f $(CONFIG_DIR)
-
+	helm install schednex ./schednex
 undeploy:
-	kubectl delete -f $(CONFIG_DIR) 
+	helm uninstall schednex
 # Help command
 help:
 	@echo "Makefile commands:"
