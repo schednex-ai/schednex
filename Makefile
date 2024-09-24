@@ -34,7 +34,7 @@ clean:
 
 # Deploy the Kubernetes manifests
 deploy:
-	helm install schednex ./schednex
+	helm install schednex ./charts/schednex
 undeploy:
 	helm uninstall schednex
 # Help command
@@ -43,5 +43,5 @@ help:
 	@echo "  make build   - Build the Docker image for Schednex."
 	@echo "  make push    - Push the Docker image to the repository."
 	@echo "  make clean   - Remove the local Docker image."
-	@echo "  make deploy   - Deploy the Kubernetes manifests from the config folder."
+	@echo "  make deploy  - Deploy the Kubernetes manifests from the config folder."
 	@echo "  make help    - Show this help message."

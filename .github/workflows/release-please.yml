@@ -49,7 +49,7 @@ jobs:
         uses: stefanprodan/helm-gh-pages@master
         with:
           token: ${{ secrets.SCHEDNEX_BOT_SECRET }}
-          charts_dir: schednex
+          charts_dir: charts
           charts_url: https://charts.schednex-ai.github.io
           owner: schednex-ai
           repository: charts
