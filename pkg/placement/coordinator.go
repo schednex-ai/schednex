@@ -73,6 +73,7 @@ func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
 			return firstResponse, nil
 		}
 	}
+	c.log.Info("Delegating to default scheduler")
 	// Delegate to the default scheduler on error
 	patchData := []byte(`{"spec": {"schedulerName": null}}`)
 	_, err = c.kubernetesClient.CoreV1().Pods(pod.Namespace).Patch(
