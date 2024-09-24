@@ -13,15 +13,11 @@ Enabling the smartest placement of your workloads.
   - `kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml`
 
 ## Installation
-
 - Install K8sGPT operator with [this guide](https://github.com/k8sgpt-ai/k8sgpt-operator?tab=readme-ov-file#installation)
 
 - Install the scheduler:
-
-_Until this repository is public, you can use the following command to install the scheduler:_
 ```
-git clone https://github.com/k8sgpt-ai/schednex.git
-make deploy
+helm repo add schednex-ai https://schednex-ai.github.io/charts/
+helm repo update
+helm install release schednex-ai/schednex -n kube-system
 ```
-_Note: if you want to use a local three node cluster with KIND you can use the following command:_
-`make cluster-up`
