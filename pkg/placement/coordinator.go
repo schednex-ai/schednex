@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-logr/logr"
-	"github.com/k8sgpt-ai/schednex.git/pkg/k8sgpt_client"
-	"github.com/k8sgpt-ai/schednex.git/pkg/prompt"
+	"github.com/k8sgpt-ai/schednex/pkg/k8sgpt_client"
+	"github.com/k8sgpt-ai/schednex/pkg/prompt"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -73,6 +73,7 @@ func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
 			return firstResponse, nil
 		}
 	}
+	c.log.Info("Delegating to default scheduler")
 	// Delegate to the default scheduler on error
 	patchData := []byte(`{"spec": {"schedulerName": null}}`)
 	_, err = c.kubernetesClient.CoreV1().Pods(pod.Namespace).Patch(
