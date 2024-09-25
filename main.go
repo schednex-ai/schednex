@@ -10,6 +10,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"github.com/k8sgpt-ai/k8sgpt-operator/api/v1alpha1"
 	"github.com/k8sgpt-ai/schednex/pkg/k8sgpt_client"
 	"github.com/k8sgpt-ai/schednex/pkg/placement"
@@ -114,7 +115,8 @@ func main() {
 			}
 			event := &v1.Event{
 				ObjectMeta: metav1.ObjectMeta{
-					Name:      "PodScheduled",
+					// Use a unique name
+					Name:      fmt.Sprintf("Scheduled %s-%s", pod.Name, pod.UID),
 					Namespace: pod.Namespace,
 				},
 			}
