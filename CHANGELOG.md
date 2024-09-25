@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.2.0](https://github.com/schednex-ai/schednex/compare/v1.1.0...v1.2.0) (2024-09-25)
+
+
+### Features
+
+* adding permissions for events ([98bfea8](https://github.com/schednex-ai/schednex/commit/98bfea8ba12cd872e54d592572df85513c79c80f))
+
+
+### Other
+
+* added message about starting ([b3b6230](https://github.com/schednex-ai/schednex/commit/b3b623092d7949d6e9eb4b1a2b1618e9d8040e8b))
+* added missing event create to cluster role ([#23](https://github.com/schednex-ai/schednex/issues/23)) ([484a3fd](https://github.com/schednex-ai/schednex/commit/484a3fd893802efe80f59ed78d5a70151193b69d))
+* chore/path issue ([#21](https://github.com/schednex-ai/schednex/issues/21)) ([da657d6](https://github.com/schednex-ai/schednex/commit/da657d6fa34f19b86b230c603632200fc6dc70de))
+* corrected package path ([e0f7d3b](https://github.com/schednex-ai/schednex/commit/e0f7d3b5970ce8e5da372ea1129d5a7f7166c7cc))
+* corrected package path ([1e31fb1](https://github.com/schednex-ai/schednex/commit/1e31fb10c8c977078b4727f7b329fd30b1f1e8c7))
+* README ([3882827](https://github.com/schednex-ai/schednex/commit/38828273f1bfa8b49887f83b8d7dcd6f06d4b78d))
+* split out contributor guide ([58fc621](https://github.com/schednex-ai/schednex/commit/58fc621f61755e73a1a6c6f03ad04bca1a508e7f))
+* updated chart url ([#22](https://github.com/schednex-ai/schednex/issues/22)) ([6e6b2a0](https://github.com/schednex-ai/schednex/commit/6e6b2a0694a51551805dd47b4523f187d5a53062))
+* updated installation instructions ([bd67aec](https://github.com/schednex-ai/schednex/commit/bd67aecf7c042b21b27c16abaf82e08ead3a8970))
+* updated readme ([46f8199](https://github.com/schednex-ai/schednex/commit/46f8199000a75640a73cecb6bfc56f84058da03f))
+
 ## [1.1.0](https://github.com/schednex-ai/schednex/compare/v1.0.2...v1.1.0) (2024-09-24)
 
 
