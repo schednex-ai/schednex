@@ -5,7 +5,7 @@ metadata:
 rules:
   - apiGroups: [""]
     resources: ["pods"]
-    verbs: ["get", "list", "watch"]
+    verbs: ["get", "list", "watch", "update"]
   - apiGroups: [""]
     resources: ["pods/binding"]
     verbs: ["create"]
