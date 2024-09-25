@@ -25,7 +25,7 @@ Information from K8sGPT analyzers and cluster telemetry is used to decide where 
 
 - Install the scheduler:
 ```
-helm repo add schednex-ai https://schednex-ai.github.io/charts/
+  helm repo add schednex-ai https://charts.schednex.ai
 helm repo update
 helm install schednex-scheduler schednex-ai/schednex -n kube-system
 ```
