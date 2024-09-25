@@ -32,4 +32,4 @@ rules:
   # Adding permissions for events
   - apiGroups: [""]
     resources: ["events"]
-    verbs: ["get", "list", "watch"]
+    verbs: ["create","get", "list", "watch"]
