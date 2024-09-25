@@ -37,12 +37,6 @@ all: tidy fmt build ##
 build: ## Build the Docker image
 	docker build -t $(IMAGE_NAME):$(TAG) .
 
-.PHONY: update-image-tag
-update-image-tag: ## Update the image tag
-	@echo "Updating image tag to $(IMAGE_NAME):$(TAG) in $(DEPLOYMENT_FILE)..."
-	sed -i.bak "s|\(image: $(IMAGE_NAME):\).*|\1$(TAG)|" $(DEPLOYMENT_FILE)
-	@echo "Updated image tag in $(DEPLOYMENT_FILE)."
-
 .PHONY: push
 push: ## Push the Docker image to the repository
 	docker push $(IMAGE_NAME):$(TAG)
