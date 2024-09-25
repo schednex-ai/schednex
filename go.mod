@@ -1,4 +1,4 @@
-module github.com/k8sgpt-ai/schednex.git
+module github.com/k8sgpt-ai/schednex
 
 go 1.23.1
 
