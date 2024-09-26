@@ -14,6 +14,7 @@ import (
 	"github.com/k8sgpt-ai/k8sgpt-operator/api/v1alpha1"
 	"github.com/k8sgpt-ai/schednex/pkg/k8sgpt_client"
 	"github.com/k8sgpt-ai/schednex/pkg/placement"
+	"golang.org/x/time/rate"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -54,8 +55,10 @@ func main() {
 			os.Exit(1)
 		}
 	}
-
-	v1alpha1.AddToScheme(scheme.Scheme)
+	if err = v1alpha1.AddToScheme(scheme.Scheme); err != nil {
+		log.Error(err, "Failed to add to scheme")
+		os.Exit(1)
+	}
 
 	// Create a new client for interacting with low-level Kubernetes API
 	ctrlclient, err := client.New(config, client.Options{Scheme: scheme.Scheme})
@@ -86,16 +89,30 @@ func main() {
 	}
 	// Create a new Placement Coordinator
 	coordinator := placement.NewCoordinator(k8sgptClient, clientset, metricsClient, log)
+
+	parentCtx := context.Background()
+	ctx, _ := context.WithCancel(parentCtx)
+
+	// Create rate limiter
+	rateLimiter := rate.NewLimiter(1, 1)
+
 	// Start custom scheduler loop
 	log.Info("Starting Schednex...")
 	for {
+		err := rateLimiter.Wait(ctx)
+		if err != nil {
+			log.Error(err, "Rate limiter error")
+			return
+		}
 		// List unscheduled pods
 		unscheduledPods, err := getUnscheduledPods(clientset)
 		if err != nil {
 			log.Error(err, "Failed to list unscheduled pods")
+			//simple back off
 			time.Sleep(10 * time.Second)
 			continue
 		}
+		log.Info("Found unscheduled pods", "number", len(unscheduledPods.Items))
 
 		for _, pod := range unscheduledPods.Items {
 			log.Info("Scheduling Pod", "namespace", pod.Namespace, "name", pod.Name)
@@ -133,15 +150,16 @@ func main() {
 				Name:      pod.Name,
 				UID:       pod.UID,
 			}
+			// Source should be the schednex operator
+			event.Source = v1.EventSource{
+				Component: "Schednex",
+			}
 			// Send the event
 			_, err = clientset.CoreV1().Events(pod.Namespace).Create(context.TODO(), event, metav1.CreateOptions{})
 			if err != nil {
 				log.Error(err, "Failed to send event", "pod", pod.Name)
 			}
 		}
-
-		// Sleep before the next scheduling loop
-		time.Sleep(5 * time.Second)
 	}
 }
 
