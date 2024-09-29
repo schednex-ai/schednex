@@ -27,7 +27,7 @@ If it cannot make the decision in a timely fashion it will leverage the default 
 
 - Install the scheduler:
 ```
-  helm repo add schednex-ai https://charts.schednex.ai
+helm repo add schednex-ai https://charts.schednex.ai
 helm repo update
 helm install schednex-scheduler schednex-ai/schednex -n kube-system
 ```
