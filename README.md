@@ -1,15 +1,17 @@
 <img src="images/logo.png" width="400">
 
-A custom Kubernetes scheduler that uses insights from K8sGPT, powered by AI. 
-Enabling the smartest placement of your workloads.
+Schednex enables the smartest placement of your workloads by drawing on telemetry from K8sGPT and context awareness from AI.
+
+## Who is this for?
+
+- Cluster Operators who want dynamic control where to place workloads and avoid hot spots.
+- SRE who want to ensure additional cluster resiliency and ability to operate through partial outage.
+- Platform engineers who want to enable individual cluster tenants to manage their scheduling decisions.
 
 ## How it works
 
-_Imagine your scheduler reacting to dynamic information from your cluster._
-
 Schednex is a Kubernetes scheduler that uses insights from K8sGPT to make intelligent decisions about where to place your workloads. It uses the K8sGPT API to get recommendations for the best node to place a pod based on the pod's requirements and the current state of the cluster.
-If it cannot make the decision in a timely fashion it will failover to the default scheduler.
-Information from K8sGPT analyzers and cluster telemetry is used to decide where placement is best for new pods.
+If it cannot make the decision in a timely fashion it will leverage the default scheduler, and always enable a placement decision.
 
 ## Requirements
 
@@ -25,7 +27,7 @@ Information from K8sGPT analyzers and cluster telemetry is used to decide where 
 
 - Install the scheduler:
 ```
-  helm repo add schednex-ai https://charts.schednex.ai
+helm repo add schednex-ai https://charts.schednex.ai
 helm repo update
 helm install schednex-scheduler schednex-ai/schednex -n kube-system
 ```
