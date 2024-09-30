@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0"
+  }
+}
