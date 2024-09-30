@@ -7,20 +7,16 @@ on:
       - edited
       - synchronize
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
-  semantic-message:
+  commit-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           fetch-depth: 0
-      - name: Set up node
-        uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
-        with:
-          node-version: "20.9"
-          cache: npm
-      - name: Install dependencies
-        run: npm ci
-      - name: Validate PR commits with commitlint
-        run: |
-          npx commitlint --from "$(git rev-parse origin/main)" --verbose
+      - name: Validate all PR commits
+        uses: wagoid/commitlint-github-action@3d28780bbf0365e29b144e272b2121204d5be5f3 # v6.1.2
