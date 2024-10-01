@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.3.0](https://github.com/schednex-ai/schednex/compare/v1.2.0...v1.3.0) (2024-10-01)
+
+
+### Features
+
+* rate limiter ([#26](https://github.com/schednex-ai/schednex/issues/26)) ([41dcd73](https://github.com/schednex-ai/schednex/commit/41dcd73eb386e8caca001c6fb6f5cd3456363ea7))
+* switched over to github package ([#37](https://github.com/schednex-ai/schednex/issues/37)) ([1864467](https://github.com/schednex-ai/schednex/commit/18644672c2134e4f72b8e57f52b8cd0fb3f9a83e))
+
+
+### Bug Fixes
+
+* add missing npm package files ([#31](https://github.com/schednex-ai/schednex/issues/31)) ([a4b1935](https://github.com/schednex-ai/schednex/commit/a4b193509cfb2c95451fb4b6aed0369d34ba457a))
+* **deps:** update module google.golang.org/grpc to v1.67.1 ([#35](https://github.com/schednex-ai/schednex/issues/35)) ([3e89f01](https://github.com/schednex-ai/schednex/commit/3e89f01656d47af96ad060ed526b6257923d2c6d))
+* use github action for commit linting ([#33](https://github.com/schednex-ai/schednex/issues/33)) ([6b0b9ae](https://github.com/schednex-ai/schednex/commit/6b0b9ae017e0fe14444debb9c52a99550966f532))
+
+
+### Other
+
+* **deps:** update dependency ubuntu to v24 ([#27](https://github.com/schednex-ai/schednex/issues/27)) ([d5008cb](https://github.com/schednex-ai/schednex/commit/d5008cb7b326be45b51d1a897079a555274530e8))
+* **deps:** update docker/build-push-action digest to 32945a3 ([#29](https://github.com/schednex-ai/schednex/issues/29)) ([21ae940](https://github.com/schednex-ai/schednex/commit/21ae94016a9582482dbf1b32f809d82e27c5d378))
+* event printing ([#24](https://github.com/schednex-ai/schednex/issues/24)) ([615d9f9](https://github.com/schednex-ai/schednex/commit/615d9f981bd60df302650d9945b88c5ea6b1dd4f))
+* updated the readme ([#30](https://github.com/schednex-ai/schednex/issues/30)) ([c1faf3a](https://github.com/schednex-ai/schednex/commit/c1faf3affd3060ac2abd6713d3a9271be0328917))
+
 ## [1.2.0](https://github.com/schednex-ai/schednex/compare/v1.1.0...v1.2.0) (2024-09-25)
 
 
