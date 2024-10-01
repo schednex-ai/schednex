@@ -11,6 +11,9 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"os"
+	"time"
+
 	"github.com/k8sgpt-ai/k8sgpt-operator/api/v1alpha1"
 	"github.com/k8sgpt-ai/schednex/pkg/k8sgpt_client"
 	"github.com/k8sgpt-ai/schednex/pkg/placement"
@@ -22,11 +25,9 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
-	"os"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-	"time"
 )
 
 func main() {
@@ -112,7 +113,6 @@ func main() {
 			time.Sleep(10 * time.Second)
 			continue
 		}
-		log.Info("Found unscheduled pods", "number", len(unscheduledPods.Items))
 
 		for _, pod := range unscheduledPods.Items {
 			log.Info("Scheduling Pod", "namespace", pod.Namespace, "name", pod.Name)
