@@ -9,9 +9,9 @@
       "draft": false,
       "extra-files": [
         "README.md",
-        "schednex/templates/deployment.yaml",
-        "schednex/Chart.yaml",
-        "schednex/values.yaml",
+        "charts/schednex/templates/deployment.yaml",
+        "charts/schednex/Chart.yaml",
+        "charts/schednex/values.yaml",
         "Makefile"
       ],
       "changelog-sections": [
