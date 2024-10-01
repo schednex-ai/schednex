@@ -1,7 +1,7 @@
 # Variables
 # IMAGE_NAME = ghcr.io/schednex-ai/schednex
-IMAGE_NAME = k8sgpt/schednex
-TAG = v0 # x-release-please-version
+IMAGE_NAME = ghcr.io/schednex-ai/schednex
+TAG = v1.2.0 # x-release-please-version
 CONFIG_DIR = config
 GOOS ?= $(shell go env GOOS)
 GOARCH ?= $(shell go env GOARCH)
@@ -35,7 +35,7 @@ all: tidy fmt build ##
 
 .PHONY: build
 build: ## Build the Docker image
-	docker build -t $(IMAGE_NAME):$(TAG) .
+	docker buildx build -t $(IMAGE_NAME):$(TAG) . --platform="linux/arm64,linux/amd64"  --push
 
 .PHONY: push
 push: ## Push the Docker image to the repository
