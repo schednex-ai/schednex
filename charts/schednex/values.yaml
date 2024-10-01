@@ -1,4 +1,3 @@
 kubernetesClusterDomain: cluster.local
-# image: ghcr.io/schednex-ai/schednex
 image: ghcr.io/schednex-ai/schednex
 tag: v1.2.0 # x-release-please-version
