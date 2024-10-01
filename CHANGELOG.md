@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/schednex-ai/schednex/compare/v1.3.0...v1.4.0) (2024-10-01)
+
+
+### Features
+
+* package url ([#38](https://github.com/schednex-ai/schednex/issues/38)) ([3bdf8a4](https://github.com/schednex-ai/schednex/commit/3bdf8a457bf54441bb9ae06fc80657e99d75cd12))
+
 ## [1.3.0](https://github.com/schednex-ai/schednex/compare/v1.2.0...v1.3.0) (2024-10-01)
 
 
