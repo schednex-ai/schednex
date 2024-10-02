@@ -1,7 +1,7 @@
 # Variables
 # IMAGE_NAME = ghcr.io/schednex-ai/schednex
 IMAGE_NAME = ghcr.io/schednex-ai/schednex
-TAG = v1.2.0 # x-release-please-version
+TAG = v1.4.0 # x-release-please-version
 CONFIG_DIR = config
 GOOS ?= $(shell go env GOOS)
 GOARCH ?= $(shell go env GOARCH)
