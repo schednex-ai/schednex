@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/schednex-ai/schednex/compare/v1.4.0...v1.5.0) (2024-10-02)
+
+
+### Features
+
+* relative pods ([#40](https://github.com/schednex-ai/schednex/issues/40)) ([fd57d15](https://github.com/schednex-ai/schednex/commit/fd57d15abad8134b8d2b28c8ca5f20b8903fcc0c))
+
 ## [1.4.0](https://github.com/schednex-ai/schednex/compare/v1.3.0...v1.4.0) (2024-10-01)
 
 
