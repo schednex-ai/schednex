@@ -2,5 +2,5 @@ apiVersion: v2
 name: schednex
 description: A Helm chart for Kubernetes
 type: application
-version: 1.0.1
+version: 1.0.1 # x-release-please-version
 appVersion: 0.1.0
