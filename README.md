@@ -31,3 +31,10 @@ helm repo add schednex-ai https://charts.schednex.ai
 helm repo update
 helm install schednex-scheduler schednex-ai/schednex -n kube-system
 ```
+
+## Usage
+
+If you wish Schednex to takeover from the default schedular, add the following annotation to your pod spec:
+```
+schedulerName: schednex
+```
