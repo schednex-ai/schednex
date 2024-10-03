@@ -23,6 +23,7 @@ import (
 	_ "github.com/cenkalti/backoff/v4"
 	"github.com/go-logr/logr"
 	"github.com/k8sgpt-ai/k8sgpt-operator/api/v1alpha1"
+	"github.com/k8sgpt-ai/schednex/pkg/metrics"
 	"google.golang.org/grpc"
 	corev1 "k8s.io/api/core/v1"
 	"net"
@@ -35,6 +36,7 @@ import (
 type Client struct {
 	conn                *grpc.ClientConn
 	currentK8sgptConfig v1alpha1.K8sGPT
+	metrics             *metrics.MetricBuilder
 	log                 logr.Logger
 }
 
@@ -47,7 +49,7 @@ func (c *Client) GetCurrentConfig() (v1alpha1.K8sGPT, error) {
 }
 
 // NewClient will detect K8sGPT instances currently running in the Kubernetes cluster and connect to the first it finds
-func NewClient(ctrlruntimeClient cntrlclient.Client, log logr.Logger) (*Client, error) {
+func NewClient(ctrlruntimeClient cntrlclient.Client, m *metrics.MetricBuilder, log logr.Logger) (*Client, error) {
 
 	log = log.WithName("k8sgpt-client")
 
@@ -57,6 +59,10 @@ func NewClient(ctrlruntimeClient cntrlclient.Client, log logr.Logger) (*Client, 
 		log.Info("Creating new client for K8sGPT")
 		err := ctrlruntimeClient.List(context.Background(), k8sgptList, &cntrlclient.ListOptions{})
 		if err != nil {
+			reconcileErrorCounter := m.GetCounterVec("schednex_k8sgpt_interconnect_backoff")
+			if reconcileErrorCounter != nil {
+				reconcileErrorCounter.WithLabelValues("backoff").Inc()
+			}
 			return err
 		}
 		return nil
@@ -89,6 +95,7 @@ func NewClient(ctrlruntimeClient cntrlclient.Client, log logr.Logger) (*Client, 
 	}
 	client := &Client{conn: conn,
 		currentK8sgptConfig: k8sgptConfig,
+		metrics:             m,
 	}
 
 	return client, nil
