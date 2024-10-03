@@ -4,7 +4,7 @@ Schednex enables the smartest placement of your workloads by drawing on telemetr
 
 ## Who is this for?
 
-- Cluster Operators who want dynamic control where to place workloads and avoid hot spots.
+- Cluster Operators who want dynamic workloads and avoid hot spots.
 - SRE who want to ensure additional cluster resiliency and ability to operate through partial outage.
 - Platform engineers who want to enable individual cluster tenants to manage their scheduling decisions.
 
