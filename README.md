@@ -1,5 +1,13 @@
 <img src="images/logo.png" width="400">
 
+
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/schednex-ai/schednex/build_container.yml)
+![GitHub Release](https://img.shields.io/github/v/release/schednex-ai/schednex)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/schednex-ai/schednex)
+![GitHub License](https://img.shields.io/github/license/schednex-ai/schednex)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/schednex-ai/schednex/main)
+
+
 Schednex enables the smartest placement of your workloads by drawing on telemetry from K8sGPT and context awareness from AI.
 
 ## Who is this for?
