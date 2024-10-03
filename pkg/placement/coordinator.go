@@ -153,10 +153,8 @@ func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
 			relative_placement[fmt.Sprintf("%s is a related pod and resides on", relative.Name)] = nodeName
 		}
 	}
-
-	// Print nodeMetricsListJson
-	// Simple logic: select the first available node (custom logic can go here)
-	combinedPrompt := fmt.Sprintf(prompt.Standard, nodeMetricsListJson, k8sgptAnalysis, relative_placement)
+	combinedPrompt := fmt.Sprintf(prompt.Standard, nodeMetricsListJson,
+		k8sgptAnalysis, relative_placement)
 	// Combine the K8sGPT Analysis and the node metrics to make a decision
 	// Send query
 	response, err := c.k8sgptClient.Query(combinedPrompt)
