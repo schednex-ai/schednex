@@ -84,6 +84,9 @@ func InitializeMetrics() *MetricBuilder {
 	builder.AddMetric(MetricConfig{Name: "schednex_k8sgpt_interconnect_backoff",
 		Help:   "The number of times schednex has attempted to connect to K8sGPT",
 		Labels: []string{"k8sgpt", "interconnect"}, Type: Counter})
+	builder.AddMetric(MetricConfig{Name: "schednex_pods_scheduled",
+		Help:   "The number of times schednex has scheduled a pod",
+		Labels: []string{"schednex"}, Type: Counter})
 	builder.RegisterMetrics()
 
 	return builder

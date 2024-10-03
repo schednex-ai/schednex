@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/k8sgpt-ai/schednex/pkg/k8sgpt_client"
+	"github.com/k8sgpt-ai/schednex/pkg/metrics"
 	"github.com/k8sgpt-ai/schednex/pkg/prompt"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -20,11 +21,12 @@ type Coordinator struct {
 	kubernetesClient *kubernetes.Clientset
 	k8sgptClient     *k8sgpt_client.Client
 	metricsClient    *metricsv.Clientset
+	metricsBuilder   *metrics.MetricBuilder
 	log              logr.Logger
 }
 
 func NewCoordinator(client *k8sgpt_client.Client, kubernetesClient *kubernetes.Clientset,
-	metricsClient *metricsv.Clientset, log logr.Logger) *Coordinator {
+	metricsClient *metricsv.Clientset, metricsBuilder *metrics.MetricBuilder, log logr.Logger) *Coordinator {
 	// print creating coordinator
 	log.Info("Creating coordinator")
 	return &Coordinator{
@@ -32,6 +34,7 @@ func NewCoordinator(client *k8sgpt_client.Client, kubernetesClient *kubernetes.C
 		k8sgptClient:     client,
 		metricsClient:    metricsClient,
 		log:              log.WithName("coordinator"),
+		metricsBuilder:   metricsBuilder,
 	}
 }
 
@@ -172,6 +175,10 @@ func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
 	// Loop through the first response and make sure it matches exactly to a node name
 	for _, node := range nodeMetricsList.Items {
 		if firstResponse == node.Name {
+			podsScheduledCounter := c.metricsBuilder.GetCounterVec("schednex_pods_scheduled")
+			if podsScheduledCounter != nil {
+				podsScheduledCounter.WithLabelValues("schednex").Inc()
+			}
 			return firstResponse, nil
 		}
 	}
