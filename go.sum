@@ -1,9 +1,13 @@
+buf.build/gen/go/k8sgpt-ai/k8sgpt/connectrpc/go v1.17.0-20240920204244-7a91c8620515.1/go.mod h1:vY5/6MV/yEDzj4w3qjNX+qEcYwPrUQk26N6slfQJRUY=
+buf.build/gen/go/k8sgpt-ai/k8sgpt/grpc-ecosystem/gateway/v2 v2.22.0-20240920204244-7a91c8620515.1/go.mod h1:qVT3VFVrkD5nFUD/KEzjLbTyLwIubUsrc/TyG0X35EU=
 buf.build/gen/go/k8sgpt-ai/k8sgpt/grpc/go v1.5.1-20240920204244-7a91c8620515.1 h1:zrgiD9fwDXvwXw5P+lG5O+JEKvrUxsNs2xNS+c41xOA=
 buf.build/gen/go/k8sgpt-ai/k8sgpt/grpc/go v1.5.1-20240920204244-7a91c8620515.1/go.mod h1:UWLDF7rVrPUgIhYUkufxK2MQoCt8c2L2Mr2XKGepJdI=
 buf.build/gen/go/k8sgpt-ai/k8sgpt/protocolbuffers/go v1.34.2-20240920204244-7a91c8620515.2 h1:KNevBMEFHuPv6Z1Uhp9V3UNW06xnvp6hA2Jf6HPLdas=
 buf.build/gen/go/k8sgpt-ai/k8sgpt/protocolbuffers/go v1.34.2-20240920204244-7a91c8620515.2/go.mod h1:1wq1qVxvJkTEUQsF5/XjmhQYXYhbVoLSGhKnzS3ie54=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
+github.com/cenkalti/backoff/v4 v4.3.0 h1:MyRJ/UdXutAwSAT+s3wNd7MfTIcy71VQueUuFK343L8=
+github.com/cenkalti/backoff/v4 v4.3.0/go.mod h1:Y3VNntkOUPxTVeUxJ/G5vcM//AlwfmyYozVcomhLiZE=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
 github.com/cespare/xxhash/v2 v2.3.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
