@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.6.0](https://github.com/schednex-ai/schednex/compare/v1.5.0...v1.6.0) (2024-10-03)
+
+
+### Features
+
+* added additional scheduling metrics ([#56](https://github.com/schednex-ai/schednex/issues/56)) ([590accc](https://github.com/schednex-ai/schednex/commit/590accc32dd7c571d0c013ecf3e4b792799756d9))
+* exponential backoff ([#42](https://github.com/schednex-ai/schednex/issues/42)) ([1bc76aa](https://github.com/schednex-ai/schednex/commit/1bc76aa5a31433e2345f3c25c1c0bd585d612875))
+* metrics ([#46](https://github.com/schednex-ai/schednex/issues/46)) ([34ae648](https://github.com/schednex-ai/schednex/commit/34ae6483265083c96ef23fa1d5bd18fb2817fba3))
+
+
+### Bug Fixes
+
+* **deps:** update module golang.org/x/time to v0.6.0 ([#36](https://github.com/schednex-ai/schednex/issues/36)) ([b1223c9](https://github.com/schednex-ai/schednex/commit/b1223c9aca41a60381234e8f5747832772bfd83f))
+
+
+### Other
+
+* **deps:** update docker/build-push-action digest to 4f58ea7 ([#34](https://github.com/schednex-ai/schednex/issues/34)) ([9de12eb](https://github.com/schednex-ai/schednex/commit/9de12eb1243fade553e2e77672c6e7f33a144cc3))
+* **deps:** update docker/setup-buildx-action digest to 8026d2b ([#45](https://github.com/schednex-ai/schednex/issues/45)) ([5a668d0](https://github.com/schednex-ai/schednex/commit/5a668d055f85889979b87866a0c82a52e2e4b2b3))
+* readme ([#44](https://github.com/schednex-ai/schednex/issues/44)) ([0e8ae1f](https://github.com/schednex-ai/schednex/commit/0e8ae1ff147be4516f5074e3e68025d4f996cd26))
+
 ## [1.5.0](https://github.com/schednex-ai/schednex/compare/v1.4.0...v1.5.0) (2024-10-02)
 
 
