@@ -35,7 +35,7 @@ all: tidy fmt build ##
 
 .PHONY: build
 build: ## Build the Docker image
-	docker buildx build -t $(IMAGE_NAME):$(TAG) . --platform="linux/arm64,linux/amd64"  --push
+	docker build -t $(IMAGE_NAME):$(TAG) .
 
 .PHONY: push
 push: ## Push the Docker image to the repository
