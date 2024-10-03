@@ -14,27 +14,30 @@ limitations under the License.
 package k8sgpt_client
 
 import (
-	rpc "buf.build/gen/go/k8sgpt-ai/k8sgpt/grpc/go/schema/v1/schemav1grpc"
-	schemav1 "buf.build/gen/go/k8sgpt-ai/k8sgpt/protocolbuffers/go/schema/v1"
 	"context"
 	"encoding/json"
 	"fmt"
+	"net"
+	"os"
+	"time"
+
+	rpc "buf.build/gen/go/k8sgpt-ai/k8sgpt/grpc/go/schema/v1/schemav1grpc"
+	schemav1 "buf.build/gen/go/k8sgpt-ai/k8sgpt/protocolbuffers/go/schema/v1"
 	"github.com/cenkalti/backoff/v4"
 	_ "github.com/cenkalti/backoff/v4"
 	"github.com/go-logr/logr"
 	"github.com/k8sgpt-ai/k8sgpt-operator/api/v1alpha1"
+	"github.com/k8sgpt-ai/schednex/pkg/metrics"
 	"google.golang.org/grpc"
 	corev1 "k8s.io/api/core/v1"
-	"net"
-	"os"
 	cntrlclient "sigs.k8s.io/controller-runtime/pkg/client"
-	"time"
 )
 
 // Client for communicating with the K8sGPT in cluster deployment
 type Client struct {
 	conn                *grpc.ClientConn
 	currentK8sgptConfig v1alpha1.K8sGPT
+	metrics             *metrics.MetricBuilder
 	log                 logr.Logger
 }
 
@@ -47,23 +50,31 @@ func (c *Client) GetCurrentConfig() (v1alpha1.K8sGPT, error) {
 }
 
 // NewClient will detect K8sGPT instances currently running in the Kubernetes cluster and connect to the first it finds
-func NewClient(ctrlruntimeClient cntrlclient.Client, log logr.Logger) (*Client, error) {
+func NewClient(ctrlruntimeClient cntrlclient.Client, m *metrics.MetricBuilder, log logr.Logger) (*Client, error) {
 
 	log = log.WithName("k8sgpt-client")
 
 	k8sgptList := &v1alpha1.K8sGPTList{}
 
 	getK8sGPTObject := func() error {
-		log.Info("Creating new client for K8sGPT")
+		log.Info("Waiting for K8sGPT Custom Resources")
 		err := ctrlruntimeClient.List(context.Background(), k8sgptList, &cntrlclient.ListOptions{})
 		if err != nil {
+			reconcileErrorCounter := m.GetCounterVec("schednex_k8sgpt_object_backoff")
+			if reconcileErrorCounter != nil {
+				reconcileErrorCounter.WithLabelValues("backoff").Inc()
+			}
 			return err
+		}
+		if len(k8sgptList.Items) == 0 {
+			return fmt.Errorf("no K8sGPT objects found")
 		}
 		return nil
 	}
 	backoffConfig := backoff.NewExponentialBackOff()
 	backoffConfig.MaxElapsedTime = time.Duration(time.Second * 60 * 10)
 	backoffConfig.MaxInterval = time.Duration(time.Second * 60)
+
 	err := backoff.Retry(getK8sGPTObject, backoffConfig)
 	if err != nil {
 		log.Error(err, "Failed to list K8sGPT objects")
@@ -89,6 +100,7 @@ func NewClient(ctrlruntimeClient cntrlclient.Client, log logr.Logger) (*Client, 
 	}
 	client := &Client{conn: conn,
 		currentK8sgptConfig: k8sgptConfig,
+		metrics:             m,
 	}
 
 	return client, nil

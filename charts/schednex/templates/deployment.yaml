@@ -19,3 +19,5 @@ spec:
           image: {{ .Values.image }}:{{ .Values.tag }}
           imagePullPolicy: Always
           command: ["/app/schednex"]  # Make sure this matches your CMD in Dockerfile
+          ports:
+            - containerPort: {{ .Values.metrics.port }}

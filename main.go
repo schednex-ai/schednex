@@ -11,6 +11,10 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/k8sgpt-ai/schednex/pkg/metrics"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"math/rand"
+	"net/http"
 	"os"
 	"time"
 
@@ -34,15 +38,34 @@ func main() {
 	// Setup Zap logger with development mode
 	var enableDevelopmentMode bool
 	var allowAI bool
+	var metricsAddr string
+	flag.StringVar(&metricsAddr, "metrics-bind-address", "8080", "The address the metric endpoint binds to.")
 	flag.BoolVar(&enableDevelopmentMode, "development", true, "Enable development mode for Zap logger")
 	flag.BoolVar(&allowAI, "allow-ai", true, "Enable AI for scheduling")
 	// Try to get the kubeconfig from outside the cluster (for development)
 	flag.Parse()
-
 	// Initialize the Zap logger using controller-runtime
 	logger := zap.New(zap.UseDevMode(enableDevelopmentMode))
 	ctrl.SetLogger(logger)
 	log := ctrl.Log.WithName("Schednex")
+
+	// Add metrics
+	if os.Getenv("LOCAL_MODE") != "" {
+		min := 7000
+		max := 8000
+		metricsAddr = fmt.Sprintf("%d", rand.Intn(max-min+1)+min)
+	}
+	metricsBuilder := metrics.InitializeMetrics()
+	// Start the metrics handler
+	go func() {
+		http.Handle("/metrics", promhttp.Handler())
+		log.Info("Starting metrics server", "port", metricsAddr)
+		err := http.ListenAndServe(fmt.Sprintf(":%s", metricsAddr), nil)
+		if err != nil {
+			log.Error(err, "Error starting metrics server")
+			return
+		}
+	}()
 
 	// Try to use in-cluster config if available, fallback to kubeconfig
 	var config *rest.Config
@@ -76,7 +99,7 @@ func main() {
 	}
 
 	// Create a new k8sgpt Client
-	k8sgptClient, err := k8sgpt_client.NewClient(ctrlclient, log)
+	k8sgptClient, err := k8sgpt_client.NewClient(ctrlclient, metricsBuilder, log)
 	if err != nil {
 		log.Error(err, "Failed to connect k8sgpt client")
 		os.Exit(1)
