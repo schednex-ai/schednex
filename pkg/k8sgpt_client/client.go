@@ -14,20 +14,21 @@ limitations under the License.
 package k8sgpt_client
 
 import (
+	rpc "buf.build/gen/go/k8sgpt-ai/k8sgpt/grpc/go/schema/v1/schemav1grpc"
 	schemav1 "buf.build/gen/go/k8sgpt-ai/k8sgpt/protocolbuffers/go/schema/v1"
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/cenkalti/backoff/v4"
+	_ "github.com/cenkalti/backoff/v4"
 	"github.com/go-logr/logr"
-	"net"
-	"os"
-	"time"
-
-	rpc "buf.build/gen/go/k8sgpt-ai/k8sgpt/grpc/go/schema/v1/schemav1grpc"
 	"github.com/k8sgpt-ai/k8sgpt-operator/api/v1alpha1"
 	"google.golang.org/grpc"
 	corev1 "k8s.io/api/core/v1"
+	"net"
+	"os"
 	cntrlclient "sigs.k8s.io/controller-runtime/pkg/client"
+	"time"
 )
 
 // Client for communicating with the K8sGPT in cluster deployment
@@ -49,14 +50,25 @@ func (c *Client) GetCurrentConfig() (v1alpha1.K8sGPT, error) {
 func NewClient(ctrlruntimeClient cntrlclient.Client, log logr.Logger) (*Client, error) {
 
 	log = log.WithName("k8sgpt-client")
-	// add log
-	log.Info("Creating new client for K8sGPT")
+
 	k8sgptList := &v1alpha1.K8sGPTList{}
-	err := ctrlruntimeClient.List(context.Background(), k8sgptList, &cntrlclient.ListOptions{})
+
+	getK8sGPTObject := func() error {
+		log.Info("Creating new client for K8sGPT")
+		err := ctrlruntimeClient.List(context.Background(), k8sgptList, &cntrlclient.ListOptions{})
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+	backoffConfig := backoff.NewExponentialBackOff()
+	backoffConfig.MaxElapsedTime = time.Duration(time.Second * 60 * 10)
+	backoffConfig.MaxInterval = time.Duration(time.Second * 60)
+	err := backoff.Retry(getK8sGPTObject, backoffConfig)
 	if err != nil {
 		log.Error(err, "Failed to list K8sGPT objects")
-		return nil, err // Consider returning the error here
 	}
+
 	// Check list length
 	if len(k8sgptList.Items) == 0 {
 		return nil, fmt.Errorf("no K8sGPT objects found")
