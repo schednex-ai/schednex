@@ -60,9 +60,9 @@ func NewClient(ctrlruntimeClient cntrlclient.Client, m *metrics.MetricBuilder, l
 		log.Info("Waiting for K8sGPT Custom Resources")
 		err := ctrlruntimeClient.List(context.Background(), k8sgptList, &cntrlclient.ListOptions{})
 		if err != nil {
-			reconcileErrorCounter := m.GetCounterVec("schednex_k8sgpt_object_backoff")
-			if reconcileErrorCounter != nil {
-				reconcileErrorCounter.WithLabelValues("backoff").Inc()
+			objectBackoffCounter := m.GetCounterVec("schednex_k8sgpt_object_backoff")
+			if objectBackoffCounter != nil {
+				objectBackoffCounter.WithLabelValues("backoff").Inc()
 			}
 			return err
 		}

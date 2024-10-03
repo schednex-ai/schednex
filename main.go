@@ -11,12 +11,13 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/k8sgpt-ai/schednex/pkg/metrics"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"math/rand"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/k8sgpt-ai/schednex/pkg/metrics"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/k8sgpt-ai/k8sgpt-operator/api/v1alpha1"
 	"github.com/k8sgpt-ai/schednex/pkg/k8sgpt_client"
@@ -112,7 +113,9 @@ func main() {
 		os.Exit(1)
 	}
 	// Create a new Placement Coordinator
-	coordinator := placement.NewCoordinator(k8sgptClient, clientset, metricsClient, log)
+	coordinator := placement.NewCoordinator(k8sgptClient, clientset,
+		metricsClient, metricsBuilder,
+		log)
 
 	parentCtx := context.Background()
 	ctx, _ := context.WithCancel(parentCtx)
