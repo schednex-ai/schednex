@@ -33,3 +33,8 @@ rules:
   - apiGroups: [""]
     resources: ["events"]
     verbs: ["create","get", "list", "watch"]
+  # Adding permissions for replicasets, deployments, daemonsets, statefulsets
+  - apiGroups: ["apps"]
+    resources: ["replicasets", "deployments", "daemonsets", "statefulsets"]
+    verbs: ["get", "list", "watch"]
+    

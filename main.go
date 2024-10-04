@@ -16,6 +16,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/cenkalti/backoff/v4"
+	"github.com/k8sgpt-ai/schednex/pkg/backoff_config"
 	"github.com/k8sgpt-ai/schednex/pkg/metrics"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
@@ -143,11 +145,23 @@ func main() {
 		for _, pod := range unscheduledPods.Items {
 			log.Info("Scheduling Pod", "namespace", pod.Namespace, "name", pod.Name)
 
-			node, err := coordinator.FindNodeForPod(pod, allowAI)
+			var node string
+			exeFindNode := func() error {
+				node, err = coordinator.FindNodeForPod(pod, allowAI)
+				if err != nil {
+					return err
+				}
+				return nil
+			}
+
+			backoffConfig := backoff.NewExponentialBackOff()
+			backoffConfig.MaxElapsedTime = backoff_config.MAX_TIME
+			backoffConfig.MaxInterval = backoff_config.MAX_INTERVAL
+			backoffConfig.InitialInterval = 10 * time.Second
+
+			err := backoff.Retry(exeFindNode, backoffConfig)
 			if err != nil {
-				// print the error we get back
 				log.Error(err, "Error from K8sGPT", "pod", pod.Name)
-				continue
 			}
 
 			err = bindPodToNode(clientset, pod, node)
