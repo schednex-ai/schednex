@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.7.0](https://github.com/schednex-ai/schednex/compare/v1.6.0...v1.7.0) (2024-10-04)
+
+
+### Features
+
+* added k8sgpt reconnection mechanism ([#57](https://github.com/schednex-ai/schednex/issues/57)) ([0f8d762](https://github.com/schednex-ai/schednex/commit/0f8d7624da6a242b06cca58017a41c7abe8b5766))
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/prometheus/client_golang to v1.20.4 ([#59](https://github.com/schednex-ai/schednex/issues/59)) ([2caff16](https://github.com/schednex-ai/schednex/commit/2caff1615d9043ce639309ac0926342cdb644585))
+
 ## [1.6.0](https://github.com/schednex-ai/schednex/compare/v1.5.0...v1.6.0) (2024-10-03)
 
 
