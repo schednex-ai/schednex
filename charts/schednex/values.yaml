@@ -3,3 +3,10 @@ image: ghcr.io/schednex-ai/schednex
 tag: v1.6.0 # x-release-please-version
 metrics:
   port: 8080
+  serviceMonitor:
+    enabled: false
+    namespace: 
+    additionalLabels:
+      app.kubernetes.io/instance: schednex
+      app.kubernetes.io/name: schednex
+      app.kubernetes.io/version: v1.6.0  # x-release-please-version
