@@ -149,8 +149,6 @@ func main() {
 			exeFindNode := func() error {
 				node, err = coordinator.FindNodeForPod(pod, allowAI)
 				if err != nil {
-					// print the error we get back
-					log.Error(err, "Error from K8sGPT", "pod", pod.Name)
 					return err
 				}
 				return nil

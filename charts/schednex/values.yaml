@@ -1,6 +1,6 @@
 kubernetesClusterDomain: cluster.local
 image: ghcr.io/schednex-ai/schednex
-tag: v1.6.0 # x-release-please-version
+tag: v1.7.0 # x-release-please-version
 metrics:
   port: 8080
   serviceMonitor:
