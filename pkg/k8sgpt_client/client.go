@@ -27,6 +27,7 @@ import (
 	_ "github.com/cenkalti/backoff/v4"
 	"github.com/go-logr/logr"
 	"github.com/k8sgpt-ai/k8sgpt-operator/api/v1alpha1"
+	"github.com/k8sgpt-ai/schednex/pkg/backoff_config"
 	"github.com/k8sgpt-ai/schednex/pkg/metrics"
 	"google.golang.org/grpc"
 	corev1 "k8s.io/api/core/v1"
@@ -72,8 +73,8 @@ func NewClient(ctrlruntimeClient cntrlclient.Client, m *metrics.MetricBuilder, l
 		return nil
 	}
 	backoffConfig := backoff.NewExponentialBackOff()
-	backoffConfig.MaxElapsedTime = time.Duration(time.Second * 60 * 10)
-	backoffConfig.MaxInterval = time.Duration(time.Second * 60)
+	backoffConfig.MaxElapsedTime = backoff_config.MAX_TIME
+	backoffConfig.MaxInterval = backoff_config.MAX_INTERVAL
 
 	err := backoff.Retry(getK8sGPTObject, backoffConfig)
 	if err != nil {

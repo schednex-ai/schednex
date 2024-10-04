@@ -5,7 +5,7 @@ TAG = v1.6.0 # x-release-please-version
 CONFIG_DIR = config
 GOOS ?= $(shell go env GOOS)
 GOARCH ?= $(shell go env GOARCH)
-
+OPENAI_TOKEN ?= $(shell env OPENAI_TOKEN)
 .DEFAULT_GOAL = all
 
 ##@ General
@@ -35,7 +35,7 @@ all: tidy fmt build ##
 
 .PHONY: build
 build: ## Build the Docker image
-	docker buildx build -t $(IMAGE_NAME):$(TAG) . --platform="linux/arm64,linux/amd64"  --push
+	docker buildx build -t $(IMAGE_NAME):$(TAG) . --platform="linux/arm64"  --push
 
 .PHONY: push
 push: ## Push the Docker image to the repository
@@ -54,6 +54,11 @@ cluster-up: ## Create a development cluster with kind
 	kubectl -n kube-system patch deployment metrics-server \
 	  --type='json' \
 	  -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
+	helm repo add k8sgpt https://charts.k8sgpt.ai/
+	helm repo update
+	helm install release k8sgpt/k8sgpt-operator -n k8sgpt-operator-system --create-namespace
+	kubectl create secret generic k8sgpt-sample-secret --from-literal=openai-api-key=$(OPENAI_TOKEN) -n k8sgpt-operator-system
+
 
 .PHONY: deploy
 deploy: helm ## Deploy the Kubernetes manifests from the config folder
