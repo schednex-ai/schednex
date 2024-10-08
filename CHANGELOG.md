@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.7.1](https://github.com/schednex-ai/schednex/compare/v1.7.0...v1.7.1) (2024-10-08)
+
+
+### Bug Fixes
+
+* **deps:** update module golang.org/x/time to v0.7.0 ([#63](https://github.com/schednex-ai/schednex/issues/63)) ([270d799](https://github.com/schednex-ai/schednex/commit/270d7990505a437863e9cfd68a74048e4ac030f3))
+
+
+### Other
+
+* **deps:** update actions/upload-artifact digest to 604373d ([#65](https://github.com/schednex-ai/schednex/issues/65)) ([1b705ea](https://github.com/schednex-ai/schednex/commit/1b705eaf3b258a5f70be09d1c45cdcb17f9ba5aa))
+* **deps:** update docker/setup-buildx-action digest to c47758b ([#60](https://github.com/schednex-ai/schednex/issues/60)) ([094778f](https://github.com/schednex-ai/schednex/commit/094778fb0dc12491806022b5d3bde5159afa9d26))
+
 ## [1.7.0](https://github.com/schednex-ai/schednex/compare/v1.6.0...v1.7.0) (2024-10-04)
 
 
