@@ -4,7 +4,7 @@ go 1.23.1
 
 require (
 	buf.build/gen/go/k8sgpt-ai/k8sgpt/grpc/go v1.5.1-20240920204244-7a91c8620515.1
-	buf.build/gen/go/k8sgpt-ai/k8sgpt/protocolbuffers/go v1.34.2-20240920204244-7a91c8620515.2
+	buf.build/gen/go/k8sgpt-ai/k8sgpt/protocolbuffers/go v1.35.1-20240920204244-7a91c8620515.1
 	github.com/cenkalti/backoff/v4 v4.3.0
 	github.com/go-logr/logr v1.4.2
 	github.com/k8sgpt-ai/k8sgpt-operator v0.2.0
@@ -62,7 +62,7 @@ require (
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240814211410-ddb44dafa142 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240814211410-ddb44dafa142 // indirect
-	google.golang.org/protobuf v1.34.2 // indirect
+	google.golang.org/protobuf v1.35.1 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
