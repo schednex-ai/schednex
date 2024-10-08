@@ -182,6 +182,12 @@ func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
 			return firstResponse, nil
 		}
 	}
+
+	placementFailureCounter := c.metricsBuilder.GetCounterVec("schednex_placement_failure")
+	if placementFailureCounter != nil {
+		placementFailureCounter.WithLabelValues("schednex", "placement").Inc()
+	}
+
 	c.log.Info("Delegating to default scheduler")
 	// Delegate to the default scheduler on error
 	patchData := []byte(`{"spec": {"schedulerName": null}}`)
