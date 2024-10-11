@@ -160,6 +160,10 @@ func (c *Client) RunAnalysis(allowAIRequest bool) (string, error) {
 	}
 	res, err := client.Analyze(context.Background(), req)
 	if err != nil {
+		interconnectBackoff := c.metrics.GetCounterVec("schednex_k8sgpt_interconnect_backoff")
+		if interconnectBackoff != nil {
+			interconnectBackoff.WithLabelValues("k8sgpt", "interconnect").Inc()
+		}
 		return "", fmt.Errorf("failed to call Analyze RPC: %v", err)
 	}
 	c.log.Info("Analysis complete")
@@ -185,6 +189,7 @@ func (c *Client) Query(prompt string) (string, error) {
 
 	res, err := client.Query(context.Background(), req)
 	if err != nil {
+		c.metrics.GetCounterVec("schednex_k8sgpt_interconnect_backoff").WithLabelValues("backoff").Inc()
 		return "", fmt.Errorf("failed to call Query RPC: %v", err)
 	}
 	c.log.Info("Query complete")

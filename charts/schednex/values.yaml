@@ -1,5 +1,15 @@
 kubernetesClusterDomain: cluster.local
 image: ghcr.io/schednex-ai/schednex
 tag: v1.7.0 # x-release-please-version
+namespace: kube-system
 metrics:
   port: 8080
+  serviceMonitor:
+    # This will require prometheus setup for monitors in other namespaces
+    # 
+    enabled: true
+    additionalLabels:
+      app.kubernetes.io/instance: schednex
+      app.kubernetes.io/name: schednex
+      app.kubernetes.io/version: v1.6.0  # x-release-please-version
+      

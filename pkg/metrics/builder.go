@@ -87,6 +87,9 @@ func InitializeMetrics() *MetricBuilder {
 	builder.AddMetric(MetricConfig{Name: "schednex_pods_scheduled",
 		Help:   "The number of times schednex has scheduled a pod",
 		Labels: []string{"schednex"}, Type: Counter})
+	builder.AddMetric(MetricConfig{Name: "schednex_placement_failure",
+		Help:   "The number of times schednex failed to place a pod",
+		Labels: []string{"schednex", "placement"}, Type: Counter})
 	builder.RegisterMetrics()
 
 	return builder

@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "schednex.fullname" . }}-metrics-monitor
+  namespace: {{ .Values.namespace | default (include "schednex.namespace" . ) }}
+  labels:
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/created-by: schednex
+    app.kubernetes.io/part-of: schednex
+    {{- include "schednex.labels" . | nindent 4 }}
+  {{- if .Values.metrics.serviceMonitor.additionalLabels }}
+    {{- toYaml .Values.metrics.serviceMonitor.additionalLabels | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.metrics.serviceMonitor.namespace }}
+  namespaceSelector:
+    matchNames:
+    - {{ include "schednex.namespace" . }}
+  {{- end }}
+  endpoints:
+  - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    path: /metrics
+    port: "{{ .Values.metrics.port }}"
+    scheme: https
+    tlsConfig:
+      insecureSkipVerify: true
+  selector:
+    matchLabels:
+      app: schednex
