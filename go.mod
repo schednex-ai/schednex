@@ -9,7 +9,7 @@ require (
 	github.com/go-logr/logr v1.4.2
 	github.com/k8sgpt-ai/k8sgpt-operator v0.2.0
 	github.com/prometheus/client_golang v1.20.5
-	golang.org/x/time v0.7.0
+	golang.org/x/time v0.8.0
 	google.golang.org/grpc v1.67.1
 	k8s.io/api v0.31.2
 	k8s.io/apimachinery v0.31.2
