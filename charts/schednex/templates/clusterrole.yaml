@@ -5,7 +5,7 @@ metadata:
 rules:
   - apiGroups: [""]
     resources: ["pods"]
-    verbs: ["get", "list", "watch", "update"]
+    verbs: ["get", "list", "watch", "update","patch"]
   - apiGroups: [""]
     resources: ["pods/binding"]
     verbs: ["create"]
@@ -32,7 +32,7 @@ rules:
   # Adding permissions for events
   - apiGroups: [""]
     resources: ["events"]
-    verbs: ["create","get", "list", "watch"]
+    verbs: ["create","get", "list", "watch", "update"]
   # Adding permissions for replicasets, deployments, daemonsets, statefulsets
   - apiGroups: ["apps"]
     resources: ["replicasets", "deployments", "daemonsets", "statefulsets"]
