@@ -21,7 +21,7 @@ jobs:
     permissions:
       contents: write  # for google-github-actions/release-please-action to create release commit
       pull-requests: write  # for google-github-actions/release-please-action to create release PR
-    runs-on: ubuntu-latest
+    runs-on: equinix-32cpu-256gb
     outputs:
       releases_created: ${{ steps.release.outputs.releases_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
@@ -41,7 +41,7 @@ jobs:
     needs: release-please
     permissions:
       contents: write
-    runs-on: ubuntu-latest
+    runs-on: equinix-32cpu-256gb
     if: needs.release-please.outputs.releases_created == 'true'
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
@@ -61,7 +61,7 @@ jobs:
     if: needs.release-please.outputs.releases_created == 'true'
     needs:
       - release-please
-    runs-on: ubuntu-24.04
+    runs-on: equinix-32cpu-256gb
     permissions:
       contents: write
       packages: write
