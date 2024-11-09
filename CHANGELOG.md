@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.8.0](https://github.com/schednex-ai/schednex/compare/v1.7.0...v1.8.0) (2024-11-09)
+
+
+### Features
+
+* service monitor v2 ([#68](https://github.com/schednex-ai/schednex/issues/68)) ([fa7cf23](https://github.com/schednex-ai/schednex/commit/fa7cf230fcea004aa9591b33ca93337903a20412))
+* updated permissions to allow pod patching ([#75](https://github.com/schednex-ai/schednex/issues/75)) ([9b5b3be](https://github.com/schednex-ai/schednex/commit/9b5b3be7c00a122a805ce745c721e10c3339387e))
+
+
+### Bug Fixes
+
+* **deps:** update kubernetes packages to v0.31.2 ([#71](https://github.com/schednex-ai/schednex/issues/71)) ([f9973ef](https://github.com/schednex-ai/schednex/commit/f9973efbc891848bd593f32b20f5309558d43a88))
+* **deps:** update module github.com/prometheus/client_golang to v1.20.5 ([#70](https://github.com/schednex-ai/schednex/issues/70)) ([2081418](https://github.com/schednex-ai/schednex/commit/20814184b994afb9563f881b5eadb002819ba2cb))
+* **deps:** update module golang.org/x/time to v0.7.0 ([#63](https://github.com/schednex-ai/schednex/issues/63)) ([270d799](https://github.com/schednex-ai/schednex/commit/270d7990505a437863e9cfd68a74048e4ac030f3))
+* **deps:** update module sigs.k8s.io/controller-runtime to v0.19.1 ([#72](https://github.com/schednex-ai/schednex/issues/72)) ([08f3db4](https://github.com/schednex-ai/schednex/commit/08f3db40f28b06be09a2dfd9e4e79d1f7bee5e82))
+
+
+### Other
+
+* **deps:** update actions/upload-artifact digest to 604373d ([#65](https://github.com/schednex-ai/schednex/issues/65)) ([1b705ea](https://github.com/schednex-ai/schednex/commit/1b705eaf3b258a5f70be09d1c45cdcb17f9ba5aa))
+* **deps:** update actions/upload-artifact digest to b4b15b8 ([#66](https://github.com/schednex-ai/schednex/issues/66)) ([915ab62](https://github.com/schednex-ai/schednex/commit/915ab62208d3df997ccced90e453ae1ffbad43d6))
+* **deps:** update docker/setup-buildx-action digest to c47758b ([#60](https://github.com/schednex-ai/schednex/issues/60)) ([094778f](https://github.com/schednex-ai/schednex/commit/094778fb0dc12491806022b5d3bde5159afa9d26))
+
 ## [1.7.0](https://github.com/schednex-ai/schednex/compare/v1.6.0...v1.7.0) (2024-10-04)
 
 
