@@ -1,6 +1,6 @@
 kubernetesClusterDomain: cluster.local
 image: ghcr.io/schednex-ai/schednex
-tag: v1.8.0 # x-release-please-version
+tag: v1.9.0 # x-release-please-version
 namespace: kube-system
 metrics:
   port: 8080
@@ -11,5 +11,5 @@ metrics:
     additionalLabels:
       app.kubernetes.io/instance: schednex
       app.kubernetes.io/name: schednex
-      app.kubernetes.io/version: v1.8.0  # x-release-please-version
+      app.kubernetes.io/version: v1.9.0  # x-release-please-version
       

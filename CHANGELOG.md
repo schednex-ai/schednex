@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.9.0](https://github.com/schednex-ai/schednex/compare/v1.8.0...v1.9.0) (2024-12-02)
+
+
+### Features
+
+* improved runner size ([#77](https://github.com/schednex-ai/schednex/issues/77)) ([fb67594](https://github.com/schednex-ai/schednex/commit/fb675940db7a63f9edf7ad1174370a1923eb47cc))
+
+
+### Other
+
+* **deps:** update actions/checkout digest to 11bd719 ([#64](https://github.com/schednex-ai/schednex/issues/64)) ([ce2810b](https://github.com/schednex-ai/schednex/commit/ce2810b03280673d01e33d803b5538781d43490e))
+* **deps:** update all non-major dependencies ([#76](https://github.com/schednex-ai/schednex/issues/76)) ([2bc57fb](https://github.com/schednex-ai/schednex/commit/2bc57fba19de4308a5f00eb365c23c8b4afb7e91))
+* **deps:** update all non-major dependencies ([#79](https://github.com/schednex-ai/schednex/issues/79)) ([5d8f053](https://github.com/schednex-ai/schednex/commit/5d8f05369f7dd361bbc96b7257b22c4d46ff67c5))
+* **deps:** update docker/build-push-action digest to 48aba3b ([#80](https://github.com/schednex-ai/schednex/issues/80)) ([c8a6123](https://github.com/schednex-ai/schednex/commit/c8a6123b2d800706471f162e01a350e1e1f2c7da))
+
 ## [1.8.0](https://github.com/schednex-ai/schednex/compare/v1.7.0...v1.8.0) (2024-11-09)
 
 
