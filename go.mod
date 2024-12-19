@@ -6,6 +6,7 @@ require (
 	buf.build/gen/go/k8sgpt-ai/k8sgpt/grpc/go v1.5.1-20241118152629-1379a5a1889d.1
 	buf.build/gen/go/k8sgpt-ai/k8sgpt/protocolbuffers/go v1.35.2-20241118152629-1379a5a1889d.1
 	github.com/cenkalti/backoff/v4 v4.3.0
+	github.com/cenkalti/backoff/v5 v5.0.0
 	github.com/go-logr/logr v1.4.2
 	github.com/k8sgpt-ai/k8sgpt-operator v0.2.0
 	github.com/prometheus/client_golang v1.20.5
