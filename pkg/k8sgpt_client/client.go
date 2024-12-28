@@ -63,7 +63,7 @@ func NewClient(ctrlruntimeClient cntrlclient.Client, m *metrics.MetricBuilder, l
 		if err != nil {
 			objectBackoffCounter := m.GetCounterVec("schednex_k8sgpt_object_backoff")
 			if objectBackoffCounter != nil {
-				objectBackoffCounter.WithLabelValues("backoff").Inc()
+				objectBackoffCounter.WithLabelValues("k8sgpt", "backoff").Inc()
 			}
 			return err
 		}
@@ -189,7 +189,7 @@ func (c *Client) Query(prompt string) (string, error) {
 
 	res, err := client.Query(context.Background(), req)
 	if err != nil {
-		c.metrics.GetCounterVec("schednex_k8sgpt_interconnect_backoff").WithLabelValues("backoff").Inc()
+		c.metrics.GetCounterVec("schednex_k8sgpt_interconnect_backoff").WithLabelValues("k8sgpt", "backoff").Inc()
 		return "", fmt.Errorf("failed to call Query RPC: %v", err)
 	}
 	c.log.Info("Query complete")

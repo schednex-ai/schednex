@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/go-logr/logr"
@@ -127,7 +128,6 @@ func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
 		c.log.Error(err, "Something went wrong with K8sGPT analysis")
 		return "", err
 	}
-	// Look at the current analysis results and the load on the current nodes
 	// Get node metrics
 	nodeMetricsList, err := c.metricsClient.MetricsV1beta1().
 		NodeMetricses().List(context.TODO(), metav1.ListOptions{})
@@ -135,12 +135,12 @@ func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
 		c.log.Error(err, "Failed to get node metrics")
 		return "", err
 	}
-	// Flatten nodeMetricsList items into json
+	// Flatten nodeMetricsList items into JSON
 	nodeMetricsListJson, err := json.Marshal(nodeMetricsList)
 	if err != nil {
 		return "", err
 	}
-	// get relatives that have a different name to current pod
+	// Get relatives that have a different name from the current pod
 	relatives, err := c.findRelatives(pod)
 	if err != nil {
 		c.log.Error(err, "Failed to get relatives")
@@ -148,7 +148,6 @@ func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
 	relative_placement := make(map[string]string)
 	for _, relative := range relatives {
 		if relative.Name != pod.Name {
-			// Find the node the relative is placed on
 			nodeName, err := c.findNodePlacement(relative)
 			if err != nil {
 				continue
@@ -156,40 +155,50 @@ func (c *Coordinator) FindNodeForPod(pod v1.Pod, allowAI bool) (string, error) {
 			relative_placement[fmt.Sprintf("%s is a related pod and resides on", relative.Name)] = nodeName
 		}
 	}
-
-	// Print nodeMetricsListJson
-	// Simple logic: select the first available node (custom logic can go here)
+	// Formulate the prompt
 	combinedPrompt := fmt.Sprintf(prompt.Standard, nodeMetricsListJson, k8sgptAnalysis, relative_placement)
-	// Combine the K8sGPT Analysis and the node metrics to make a decision
-	// Send query
+	// Send the query to the AI backend
 	response, err := c.k8sgptClient.Query(combinedPrompt)
 	if err != nil {
 		return "", err
 	}
-	// Often the response can be a list of multiple nodes, sometimes even missing a string seperator
+	// Print the raw response for debugging
 	fmt.Printf("Response: %s\n", response)
-	firstResponse := strings.Split(response, " ")[0]
-	if firstResponse == "" {
-		return "", fmt.Errorf("no response found")
-	}
-	// Loop through the first response and make sure it matches exactly to a node name
+	// Trim response to avoid trailing/leading spaces or newlines
+	response = strings.TrimSpace(response)
+	// Direct match check
 	for _, node := range nodeMetricsList.Items {
-		if firstResponse == node.Name {
+		if response == node.Name {
 			podsScheduledCounter := c.metricsBuilder.GetCounterVec("schednex_pods_scheduled")
 			if podsScheduledCounter != nil {
 				podsScheduledCounter.WithLabelValues("schednex").Inc()
 			}
-			return firstResponse, nil
+			return response, nil
 		}
 	}
-
+	// Fallback to regex extraction if direct match fails
+	re := regexp.MustCompile(`\b(\S+)\b`)
+	matches := re.FindStringSubmatch(response)
+	if len(matches) > 1 {
+		firstResponse := matches[1]
+		// Validate extracted node name
+		for _, node := range nodeMetricsList.Items {
+			if firstResponse == node.Name {
+				podsScheduledCounter := c.metricsBuilder.GetCounterVec("schednex_pods_scheduled")
+				if podsScheduledCounter != nil {
+					podsScheduledCounter.WithLabelValues("schednex").Inc()
+				}
+				return firstResponse, nil
+			}
+		}
+	}
+	// Increment failure counter if no match found
 	placementFailureCounter := c.metricsBuilder.GetCounterVec("schednex_placement_failure")
 	if placementFailureCounter != nil {
 		placementFailureCounter.WithLabelValues("schednex", "placement").Inc()
 	}
-
+	// Fallback to default scheduler
 	c.log.Info("Delegating to default scheduler")
-	// Delegate to the default scheduler on error
 	patchData := []byte(`{"spec": {"schedulerName": null}}`)
 	_, err = c.kubernetesClient.CoreV1().Pods(pod.Namespace).Patch(
 		context.TODO(),
