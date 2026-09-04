@@ -1,5 +1,5 @@
 # Step 1: Build the Go binary for Schednex
-FROM golang:1.23-alpine AS builder
+FROM golang:1.27-alpine AS builder
 
 # Install git for dependency management
 RUN apk add --no-cache git
