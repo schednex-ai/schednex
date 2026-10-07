@@ -95,7 +95,7 @@ jobs:
           outputs: type=docker,dest=/tmp/${{ env.IMAGE_NAME }}-image.tar
 
       - name: Upload image as artifact
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: ${{ env.IMAGE_NAME }}-image.tar
           path: /tmp/${{ env.IMAGE_NAME }}-image.tar
